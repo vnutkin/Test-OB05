@@ -18,18 +18,35 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Мыльные пузыри")
 clock = pygame.time.Clock()
-velocity_x = 6
-velocity_y = 2
+velocity_x = 120
+velocity_y = 40
+def delta_xy(list_xy, velocity,coor ):
+    if len(list_xy) == 0:
+        if coor == 'x':
+            delta = random.randint(0,velocity_x * 2) - velocity_x
+        else:
+            delta = random.randint(0, velocity_y)
+        delta_beg = 0
+        for i in range (0,FPS):
+            increment = delta * i // FPS -delta_beg
+            list_xy.append(increment)
+            delta_beg += increment
+    return list_xy.pop(0)
+
+
+
 class Gra_obj:
     def __init__(self, posx, posy, color):
         self.posx = posx
         self.posy = posy
         self.color = color
-        self.typ_obj = ''
+        self.list_x = []
+        self.list_y = []
     def fly(self):
-        self.posy -= random.randint(0, velocity_y)
-        self.posx += random.randint(0,velocity_x * 2) - velocity_x
-
+#        self.posy -= random.randint(0, velocity_y)
+#        self.posx += random.randint(0,velocity_x * 2) - velocity_x
+        self.posy -= delta_xy(self.list_y,velocity_y,'y')
+        self.posx += delta_xy(self.list_x,velocity_x,'x')
 class Gra_rect(Gra_obj):
     def __init__(self, posx, posy, color, h, w):
         super().__init__( posx, posy, color)
